@@ -1,19 +1,53 @@
-ymlversion: 2.1
+version: 2.1
+
 jobs:
-  mirror:
+  sync-to-study:
     docker:
       - image: cimg/base:stable
+
     steps:
       - checkout
+
       - run:
-          name: Push to organization repo
+          name: Install rsync
           command: |
-            git config --global user.name "leeyj2306-cloud"
-            git config --global user.email "leeyj2306@naver.com"
-            git remote add org https://x-access-token:${ORG_PUSH_PAT}@github.com/SSAFY-15/SW_study_yeonju.git
-            git push org main --force
+            sudo apt-get update
+            sudo apt-get install -y rsync
+
+      - run:
+          name: Clone study repository
+          command: |
+            git clone https://x-access-token:${ORG_PUSH_PAT}@github.com/SSAFY-15/SW_study_yeonju.git study-repo
+
+      - run:
+          name: Sync BOJ solutions to study repo
+          command: |
+            export LANG=C.UTF-8
+
+            TARGET_DIR="study-repo/SSAFY-15/SW_study_yeonju/백준"
+            mkdir -p "$TARGET_DIR"
+
+            rsync -av ./ "$TARGET_DIR" \
+              --exclude study-repo \
+              --exclude .git \
+              --exclude .circleci \
+              --exclude README.md
+
+      - run:
+          name: Commit & push
+          command: |
+            cd study-repo
+
+            git config user.name "leeyj2306-cloud"
+            git config user.email "leeyj2306@naver.com"
+
+            git add SSAFY-15/SW_study_yeonju/백준
+            git commit -m "Update yeonju BOJ solutions" || echo "No changes to commit"
+
+            git push
+
 workflows:
   version: 2
-  mirror-to-org:
+  sync-workflow:
     jobs:
-      - mirror
+      - sync-to-study
