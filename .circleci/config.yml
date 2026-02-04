@@ -41,7 +41,7 @@ jobs:
             git config user.name "leeyj2306-cloud"
             git config user.email "leeyj2306@naver.com"
 
-            git add SSAFY-15/SW_study_yeonju/백준
+            git add SSAFY-15/SW_study_yeonju/
             git commit -m "Update yeonju BOJ solutions" || echo "No changes to commit"
 
             git push
