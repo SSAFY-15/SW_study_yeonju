@@ -24,7 +24,7 @@ jobs:
           command: |
             export LANG=C.UTF-8
 
-            TARGET_DIR="study-repo/SSAFY-15/SW_study_yeonju/백준"
+            TARGET_DIR="study-repo"
             mkdir -p "$TARGET_DIR"
 
             rsync -av ./ "$TARGET_DIR" \
@@ -41,7 +41,7 @@ jobs:
             git config user.name "leeyj2306-cloud"
             git config user.email "leeyj2306@naver.com"
 
-            git add SSAFY-15/SW_study_yeonju
+            git add 백준
             git commit -m "Update yeonju BOJ solutions" || echo "No changes to commit"
 
             git push
